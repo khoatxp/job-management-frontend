@@ -18,6 +18,7 @@ function DeleteButton({ postId, callback }) {
         query: FETCH_POSTS_QUERY
       });
       data.getJobPosts = data.getJobPosts.filter((p) => p.id !== postId);
+      console.log(data);
       proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
       if (callback) callback();
     },

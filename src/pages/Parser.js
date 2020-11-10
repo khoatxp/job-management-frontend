@@ -147,7 +147,7 @@ class Parser extends Component {
           <br/>
           <form method="post" action="#" id="#">
             <div className="form-group files">
-              <label for="file">Upload resume (docx or pdf):</label>
+              <label >Upload resume (docx or pdf):</label>
               <input type="file" name="file" className="form-control" onChange={(event) => this.onUploadHandler(event)} />
             </div>
           </form>

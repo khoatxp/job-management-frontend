@@ -14,9 +14,8 @@ import DeleteButton from '../components/DeleteButton';
 function SinglePost(props) {
   const postId = props.match.params.postId;
   const { user } = useContext(AuthContext);
-
   const {
-    data: { getJobPost }
+    data: { getJobPost } ={}
   } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId
