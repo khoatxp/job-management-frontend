@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-
+import { useHistory } from 'react-router-dom';
 import { useForm } from '../util/hooks';
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
@@ -10,7 +10,7 @@ function PostForm() {
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: '',company:'',salary:'', title:'', location:''
   });
-
+  let history = useHistory();
   const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
     variables: values,
     update(proxy, result) {
@@ -32,12 +32,14 @@ function PostForm() {
 
   function createPostCallback() {
     createPost();
+    
+    history.push('/');
   }
 
   return (
     <>
       <Form onSubmit={onSubmit}>
-        <h1>Create a job post:</h1>
+        <h1 className="page-title">Create a job post:</h1>
         <Form.Field>
           <Form.Input
             placeholder="Job title"
@@ -74,7 +76,7 @@ function PostForm() {
             value={values.body}
             error={error ? true : false}
           />
-          <Button type="submit" color="teal">
+          <Button floated="center-center" type="submit" primary>
             Submit
           </Button>
         </Form.Field>

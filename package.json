@@ -12,6 +12,7 @@
     "apollo-client": "^2.6.10",
     "apollo-link-context": "^1.0.20",
     "apollo-link-http": "^1.5.17",
+    "axios": "^0.21.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "jwt-decode": "^3.1.1",
@@ -21,6 +22,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.0",
     "react-table": "6.11.5",
+    "reactstrap": "^8.7.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.1",
     "web-vitals": "^0.2.4"
@@ -49,5 +51,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://afternoon-dawn-53345.herokuapp.com/"
+  "proxy": "http://afternoon-dawn-53345.herokuapp.com/"
 }

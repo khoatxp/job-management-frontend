@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Card } from 'semantic-ui-react';
+import { Card,Button} from 'semantic-ui-react';
 import { Link,useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { AuthContext } from '../context/auth';
@@ -12,8 +12,8 @@ function PostCard({
   const { user } = useContext(AuthContext);
   let history = useHistory();
   function deletePostCallback() {
-    
-    history.push('/');
+   
+    history.push(window.location.pathname);
   }
   return (
     <Card fluid>
@@ -25,10 +25,22 @@ function PostCard({
         <Card.Meta >
           posted {moment(createdAt).fromNow(true)} ago
         </Card.Meta>
-        <Card.Description>{body}</Card.Description>
+        
       </Card.Content>
       <Card.Content extra>
-        {user && user.username === username && <DeleteButton postId={id} callback={deletePostCallback}/>}
+        {user && user.username === username && 
+        <div>
+        <Link to={`/applicants/${id}`} >
+        <Button
+          as="div"
+          color="blue"
+          floated="right"
+        >View Applicants</Button>
+        </Link>
+        <DeleteButton postId={id} callback={deletePostCallback}/>
+        </div>
+      }
+  
       </Card.Content>
     </Card>
   );

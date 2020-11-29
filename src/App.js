@@ -13,7 +13,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SinglePost from './pages/SinglePost';
-import Parser from './pages/Parser';
+import PostedJobs from './pages/PostedJobs';
+import CreatePost from './pages/CreatePost';
+import Applicants from './pages/Applicants';
 function App() {
   return (
     <AuthProvider>
@@ -21,10 +23,12 @@ function App() {
         <Container>
           <MenuBar />
           <Route exact path="/" component={Home} />
-          <Route exact path="/parser" component={Parser} />
+          <Route exact path="/postedjobs" component={PostedJobs} />
+          <Route exact path="/createpost" component={CreatePost} />
           <AuthRoute exact path="/login" component={Login} />
           <AuthRoute exact path="/register" component={Register} />
           <Route exact path="/jobposts/:postId" component={SinglePost} />
+          <Route exact path="/applicants/:postId" component={Applicants} />
         </Container>
       </Router>
     </AuthProvider>
