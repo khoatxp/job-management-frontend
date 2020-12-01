@@ -53,6 +53,7 @@ const FETCH_POST_QUERY = gql`
         resume
         username
         submittedAt
+        originalFile
       }
     }
   }

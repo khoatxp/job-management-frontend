@@ -57,7 +57,9 @@ function SinglePost(props) {
                 <Card.Meta >
                   posted {moment(createdAt).fromNow(true)} ago
                 </Card.Meta>
-                <Card.Description>{body}</Card.Description>
+                <Card.Description>
+                  <pre id="body">{body}</pre>
+                </Card.Description>
               </Card.Content>
               {user && user.username !== username && 
                 <Card.Content>
@@ -65,50 +67,60 @@ function SinglePost(props) {
                   <Card.Description>
                     <div>
                       <div>
-                      <input class="choose" type="file" id="file" name="resume" onChange={(event)=>{setSelectedFile(event.target.files[0])}}/>
+                      <input  type="file" id="file" name="resume" onChange={(event)=>{setSelectedFile(event.target.files[0])}}/>
                       </div>
                       <Button
                        as="div"
                        color="blue"
                        floated="right"
                        onClick ={async ()=>{
-                        document.querySelector("text").innerHTML="Loading...";
+                        //set loading indicator
+                        document.querySelector("h1").innerHTML="Loading...";
                         if(selectedFile === null){
                           window.alert("File is empty");
                           return;
                         }
-                        const toBase64 = file => new Promise((resolve, reject) => {
-                          const reader = new FileReader();
-                          reader.readAsDataURL(file);
-                          reader.onload = () => resolve(reader.result);
-                          reader.onerror = error => reject(error);
-                        });
+
+                        //check if size is too large
                         if (selectedFile.size > 5242880) {
                           alert('File size too large (limit 5 MB)')
                           console.error("File size too large")
                           return;
                         }
-                        const file = await toBase64(selectedFile);
-                        console.log(selectedFile);
+
+                        //prepare file before sending to servers
+                        const body = new FormData()
+                        body.append("file", selectedFile)
+                        body.append("userId", user.id)
+                        console.log(user.id)
                         const requestOptions = {
                           method: 'POST',
-                          body: `{"content": "${file.split(',')[1]}"}`,
-                          headers: { "content-type": "application/json"}
+                          body: body
                         };
-                        const response= await fetch('https://sleepy-hollows-73003.herokuapp.com/parseResume', requestOptions)
-                        const json = await response.json();
-                        const resume =  JSON.stringify(json);
+                       
+                        //send to bucket
+                        const response1 = await fetch('https://resumeservice-vbryqcvj2a-uw.a.run.app/resume', requestOptions)
+                        const json1 = await response1.json();
+                        const originalFile = json1.url;
+                        console.log(originalFile);
+                        //get parsed resume
+                        const response2= await fetch('https://resumeservice-vbryqcvj2a-uw.a.run.app/resume/parse', requestOptions)
+                        const json2 = await response2.json();
+                        const resume =  JSON.stringify(json2);
                         const postId = id;
+                       
                         await addApplicantMutation({ variables: {
                           postId,
-                          resume
+                          resume,
+                          originalFile
                         }}).then(()=>{
-                          document.querySelector("text").innerHTML="";
+                          document.querySelector("h1").innerHTML="";
                           window.alert("Resume submitted successfully");
                         });
                         
+                        
                       }}>Submit</Button>
-                      <text className="page-title"></text>
+                      <h1 className="page-title"></h1>
                     </div>
                   </Card.Description>
                 </Card.Content>
@@ -139,8 +151,8 @@ function SinglePost(props) {
 }
 
 const ADD_APPLICANT_MUTATION = gql`
-  mutation addApplicant($postId: ID!, $resume: String!) {
-    addApplicant(postId: $postId, resume: $resume)
+  mutation addApplicant($postId: ID!, $resume: String!, $originalFile: String!) {
+    addApplicant(postId: $postId, resume: $resume, originalFile: $originalFile)
   }
 `;
 

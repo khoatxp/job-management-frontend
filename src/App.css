@@ -15,7 +15,7 @@
   background-color: #2185d0;
 }
 
-.choose::-webkit-file-upload-button {
+#file::-webkit-file-upload-button {
   color: white;
   display: inline-block;
   background: #2185d0;
@@ -26,5 +26,10 @@
   white-space: nowrap;
   cursor: pointer;
   font-size: 10pt;
+}
+
+#body{
+  white-space: pre-wrap;
+  font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
 }
 
