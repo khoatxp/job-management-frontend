@@ -11,7 +11,7 @@ function DeleteButton({ postId, callback }) {
 
   const mutation =  DELETE_POST_MUTATION;
 
-  const [deletePostOrMutation] = useMutation(mutation, {
+  const [deletePostMutation] = useMutation(mutation, {
     update(proxy) {
       setConfirmOpen(false);
       const data = proxy.readQuery({
@@ -41,7 +41,7 @@ function DeleteButton({ postId, callback }) {
       <Confirm
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}
-        onConfirm={deletePostOrMutation}
+        onConfirm={deletePostMutation}
       />
     </>
   );
