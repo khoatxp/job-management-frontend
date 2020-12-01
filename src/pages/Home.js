@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useContext} from 'react';
-import {  Grid, Transition } from 'semantic-ui-react';
+import {  Grid, Transition, Button } from 'semantic-ui-react';
 import { AuthContext } from '../context/auth';
 import PostCard from '../components/PostCard';
 import useDebounce from '../util/use-debounce';
@@ -8,7 +8,7 @@ import { BsSearch } from "react-icons/bs";
 function Home() {
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState("");
-  //const [filter, setFilter] = useState();
+  const [filter, setFilter] = useState(false);
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const debouncedSearchTerm = useDebounce(search, 500);
@@ -29,38 +29,53 @@ function Home() {
     },
     [debouncedSearchTerm]
   );
-
+  useEffect(
+    ()=>{
+      if(!user && filter){
+        setFilter(false);
+      }
+    },[filter,user]
+  )
   
 
   return (
     <div>
     <Grid columns={2}>
       <Grid.Row className="page-title">
-      <BsSearch/>
-      <input
-          style={styles.input}
-          onChange = {(e)=>{
-            setSearch(e.target.value);
-          }}
-          value={search}
-          placeholder='Search for job posts'
-      />
-       
-          <div className="field is-grouped" style={styles.input}>
-              <div className="control">
-                  <div className="select">
-                      <select>
-                         
-                          <option >All posts</option>
-                          <option default>Posted by you</option>
-                      </select>
-                  </div>
-              </div>
-
- 
-          </div>
-     
-      <h1>Recent job posts:</h1>
+        <BsSearch/>
+        <input
+            style={styles.input}
+            onChange = {(e)=>{
+              setSearch(e.target.value);
+            }}
+            value={search}
+            placeholder='Search for job posts'
+        />
+      </Grid.Row>
+      <Grid.Row className="page-title">
+      {user && 
+        <div class="form-container">
+          <Button
+          primary
+          floated="left"
+          onClick={() => setFilter(false)}
+          >
+          All posts
+          </Button>
+          <Button
+          secondary
+          floated="right"
+          onClick={() => setFilter(true)}
+          >
+          Posted by you
+          </Button>
+        </div>
+          
+      }
+      </Grid.Row>
+          
+      <Grid.Row className="page-title">
+        <h1>Recent job posts:</h1>
       </Grid.Row>
       <Grid.Row>
         {isSearching ? (
@@ -69,13 +84,22 @@ function Home() {
           <Transition.Group>
              
 
-            {results &&
+            {!filter && results &&
               results.map((jobPost) => (
                 <Grid.Column key={jobPost._id} style={{ marginBottom: 20 }}>
-                  {console.log(jobPost._id)}
                   <PostCard jobPost={jobPost} />
                 </Grid.Column>
               ))}
+            {filter && results && user && results.map((jobPost) => (
+                <>
+                {user.username === jobPost.username && 
+                  <Grid.Column key={jobPost._id} style={{ marginBottom: 20 }}>
+                  <PostCard jobPost={jobPost} />
+                </Grid.Column>
+                }
+                
+                </>
+              )) }
           </Transition.Group>
         )}
       </Grid.Row>
