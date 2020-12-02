@@ -4,6 +4,7 @@ import { AuthContext } from '../context/auth';
 import PostCard from '../components/PostCard';
 import useDebounce from '../util/use-debounce';
 import { BsSearch } from "react-icons/bs";
+import Pagination from "react-js-pagination";
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -15,7 +16,7 @@ function Home() {
   useEffect(
     () => {
       // Make sure we have a value (user has entered something in input)
-     
+        
         // Set isSearching state
         setIsSearching(true);
         // Fire off our API call
@@ -23,20 +24,28 @@ function Home() {
         // Set back to false since request finished
         setIsSearching(false);
         // Set results state
-        setResults(results);
+        
+        if(user && filter){
+          setResults(results.filter((p)=>p.username === user.username))
+        }
+        else{
+          setResults(results)
+        }
       });
     
     },
-    [debouncedSearchTerm]
+    [debouncedSearchTerm, filter,user]
   );
-  useEffect(
-    ()=>{
-      if(!user && filter){
-        setFilter(false);
-      }
-    },[filter,user]
-  )
-  
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobPostsPerPage = 6;
+  const indexOfLastJobPost = currentPage * jobPostsPerPage;
+  const indexOfFirstJobPost = indexOfLastJobPost - jobPostsPerPage;
+  const currentJobPosts = results.slice(indexOfFirstJobPost, indexOfLastJobPost)
+  const handlePageChange = ( pageNumber ) => {
+    console.log( `active page is ${ pageNumber }` );
+    setCurrentPage( pageNumber )
+ };
 
   return (
     <div>
@@ -84,26 +93,31 @@ function Home() {
           <Transition.Group>
              
 
-            {!filter && results &&
-              results.map((jobPost) => (
+            { currentJobPosts &&
+              currentJobPosts.map((jobPost) => (
                 <Grid.Column key={jobPost._id} style={{ marginBottom: 20 }}>
                   <PostCard jobPost={jobPost} />
                 </Grid.Column>
               ))}
-            {filter && results && user && results.map((jobPost) => (
-                <>
-                {user.username === jobPost.username && 
-                  <Grid.Column key={jobPost._id} style={{ marginBottom: 20 }}>
-                  <PostCard jobPost={jobPost} />
-                </Grid.Column>
-                }
-                
-                </>
-              )) }
+
           </Transition.Group>
         )}
       </Grid.Row>
     </Grid>
+    <Grid.Row>
+      <div className="center">
+        <div className="pagination">
+            <Pagination
+               activePage={ currentPage }
+               itemsCountPerPage={ 6 }
+               totalItemsCount={ results.length }
+               pageRangeDisplayed={ 4 }
+               onChange={ handlePageChange }
+               
+            />
+         </div>
+      </div>
+    </Grid.Row>
     </div>
   );
 }
