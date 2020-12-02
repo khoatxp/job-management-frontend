@@ -43,7 +43,6 @@ function Home() {
   const indexOfFirstJobPost = indexOfLastJobPost - jobPostsPerPage;
   const currentJobPosts = results.slice(indexOfFirstJobPost, indexOfLastJobPost)
   const handlePageChange = ( pageNumber ) => {
-    console.log( `active page is ${ pageNumber }` );
     setCurrentPage( pageNumber )
  };
 
@@ -63,7 +62,7 @@ function Home() {
       </Grid.Row>
       <Grid.Row className="page-title">
       {user && 
-        <div class="form-container">
+        <div className="form-container">
           <Button
           primary
           floated="left"

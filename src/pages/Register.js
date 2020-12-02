@@ -11,6 +11,8 @@ function Register(props) {
   const [errors, setErrors] = useState({});
 
   const { onChange, onSubmit, values } = useForm(registerUser, {
+    firstName:'',
+    lastName:'',
     username: '',
     email: '',
     password: '',
@@ -41,6 +43,24 @@ function Register(props) {
     <div className="form-container">
       <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
         <h1>Register</h1>
+        <Form.Input
+          label="First name"
+          placeholder="First name.."
+          name="firstName"
+          type="text"
+          value={values.firstName}
+          error={errors.firstName ? true : false}
+          onChange={onChange}
+        />
+        <Form.Input
+          label="Last name"
+          placeholder="Last name.."
+          name="lastName"
+          type="text"
+          value={values.lastName}
+          error={errors.lastName ? true : false}
+          onChange={onChange}
+        />
         <Form.Input
           label="Username"
           placeholder="Username.."
@@ -96,6 +116,8 @@ function Register(props) {
 
 const REGISTER_USER = gql`
   mutation register(
+    $firstName: String!
+    $lastName: String!
     $username: String!
     $email: String!
     $password: String!
@@ -103,6 +125,8 @@ const REGISTER_USER = gql`
   ) {
     register(
       registerInput: {
+        firstName: $firstName
+        lastName: $lastName
         username: $username
         email: $email
         password: $password

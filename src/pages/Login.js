@@ -80,6 +80,9 @@ const LOGIN_USER = gql`
       id
       email
       username
+      firstName
+      lastName
+      biography
       createdAt
       token
     }
