@@ -9,18 +9,11 @@ import MyPopup from '../util/MyPopup';
 function DeleteButton({ postId, callback }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const mutation =  DELETE_POST_MUTATION;
 
-  const [deletePostMutation] = useMutation(mutation, {
+  const [deletePostMutation] = useMutation(DELETE_POST_MUTATION, {
     update(proxy) {
       setConfirmOpen(false);
-      const data = proxy.readQuery({
-        query: FETCH_POSTS_QUERY
-      });
-      data.getJobPosts = data.getJobPosts.filter((p) => p.id !== postId);
-      console.log(data);
-      proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
-      if (callback) callback();
+      window.location.reload();
     },
     variables: {
       postId

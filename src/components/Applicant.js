@@ -2,7 +2,6 @@ import {
     Card,
     Button
   } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import ResumeCard from './ResumeCard';
 import moment from 'moment';

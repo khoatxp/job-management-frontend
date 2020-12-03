@@ -5,7 +5,7 @@ import PostCard from '../components/PostCard';
 import useDebounce from '../util/use-debounce';
 import { BsSearch } from "react-icons/bs";
 import Pagination from "react-js-pagination";
-
+import MessageBox from "../components/MessageBox";
 function Home() {
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState("");
@@ -117,12 +117,13 @@ function Home() {
          </div>
       </div>
     </Grid.Row>
+    <MessageBox/>
     </div>
   );
 }
 function searchCharacters(search) {
   return fetch(
-    ` https://searchservice-vbryqcvj2a-uw.a.run.app/jobPosting?query=${search}`,
+    ` https://searchservice-vbryqcvj2a-uw.a.run.app/jobPosting?query=${search}&queryLimit=100`,
     {
       method: 'GET'
     }

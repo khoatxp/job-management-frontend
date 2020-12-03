@@ -1,13 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-
+import socketIOClient from "socket.io-client";
 import { AuthContext } from '../context/auth';
 
 function MenuBar() {
   const { user, logout } = useContext(AuthContext);
   const pathname = window.location.pathname;
-
+  const [endpoint, setEndpoint] = useState("http://localhost:3001/")
+  
+  // useEffect(()=>{
+  //   socket = socketIOClient(endpoint)
+  // },[endpoint])
   const path = pathname === '/' ? 'home' : pathname.substr(1);
   const [activeItem, setActiveItem] = useState(path);
 

@@ -7,10 +7,16 @@ import gql from 'graphql-tag';
 function Profile(){
     const [selectedFile, setSelectedFile] = useState(null);
     const { user } = useContext(AuthContext);
+    const userId = user.id;
     const [profile, setProfile] = useState();
+    const [edit, setEdit] = useState(false);
     const {
         data: { getProfile } ={}
-      } = useQuery(GET_PROFILE_QUERY);
+      } = useQuery(GET_PROFILE_QUERY,{
+          variables:{
+              userId
+          }
+      });
     const [firstName, setFirstName]=useState("");
     const [lastName, setLastName] =useState("");
     const [biography, setBiography] = useState("");
@@ -18,13 +24,24 @@ function Profile(){
         update() {
         window.location.reload();
       },variables: {
+        userId,
         firstName: firstName,
         lastName: lastName,
         biography:biography
     }}
     )
     const [changeProfileUrlMutation] = useMutation(CHANGE_PROFILE_PICTURE_QUERY);
+
     useEffect(()=>{
+        if(!firstName && getProfile){
+            setFirstName(getProfile.firstName)
+        }
+        if(!lastName && getProfile){
+            setLastName(getProfile.lastName)
+        }
+        if(!biography && getProfile){
+            setBiography(getProfile.biography)
+        }
         if(user && getProfile){
             setProfile(getProfile.profileUrl)
         }
@@ -86,6 +103,7 @@ function Profile(){
                                         const profileUrl = json.url;
                                         
                                         await changeProfileUrlMutation({ variables: {
+                                                userId,
                                                 profileUrl
                                             }}).then(()=>{
                                                 document.querySelector("h1").innerHTML="";
@@ -103,82 +121,55 @@ function Profile(){
                    </Grid.Column>
                    <Grid.Column width={12}>
                     <Card fluid>
+                     
                         <Card.Content>
-                            <Card.Header className ="page-title"><h1>Profile</h1></Card.Header>
-                            <div className="form-container">
-                                <Form>
-                                <Form.Input
-                                    label="Username"
-                                    type="text"
-                                    value={user.username}
-                                    readOnly={true}
-                                    />
-                                <Form.Input
-                                    label="Email"
-                                    type="text"
-                                    value={user.email}
-                                    readOnly={true}
-                                    />
-                                <Form.Input
-                                    label="First name"
-                                    type="text"
-                                    value={getProfile.firstName}
-
-                                    />
-                                <Form.Input
-                                    label="Last name"
-                                    type="text"
-                                    value={getProfile.lastName}
-
-                                    />
-                                
-                                <Form.Input
-                                    label="Biography"
-                                    type="text"
-                                    
-   
-                                    >
-                                    <Card fluid>
-                                        <Card.Content>
-                                            <pre id="body">{getProfile.biography}</pre>
-                                        </Card.Content>
-                                        
-                                    </Card>
-                                </Form.Input>
-                                
-                                </Form>
-                            </div>
-                        </Card.Content>
-                        <Card.Content>
-                            <Card.Header className="page-title"><h1>Edit Profile</h1></Card.Header>
+                            <Card.Header className="page-title"><h1>Profile</h1></Card.Header>
                             <Card.Description>
                             <div className="form-container">
                                 <Form onSubmit={changeProfile} noValidate className={loading ? 'loading' : ''}>
-                                   
                                     <Form.Input
-                                    label="Edit first name"
+                                        label="Username"
+                                        type="text"
+                                        value={user.username}
+                                        readOnly={true}
+                                        />
+                                    <Form.Input
+                                        label="Email"
+                                        type="text"
+                                        value={user.email}
+                                        readOnly={true}
+                                        />
+                                    <Form.Input
+                                    label="First name"
                                     placeholder="First name.."
                                     name="firstName"
                                     type="text"
+                                    value={firstName}
                                     onChange={(e)=>setFirstName(e.target.value)}
+                                    readOnly={!edit}
                                     />
                                     <Form.Input
-                                    label="Edit last name"
+                                    label="Last name"
                                     placeholder="Last name.."
                                     name="lastName"
+                                    value={lastName}
                                     type="text"
                                     onChange={(e)=>setLastName(e.target.value)}
+                                    readOnly={!edit}
                                     />
                                     <Form.TextArea
-                                    label="Edit biography"
+                                    label="Biography"
                                     placeholder="Biography.."
                                     name="biography"
                                     type="text"
+                                    value={biography}
                                     rows="10"
                                     onChange={(e)=>setBiography(e.target.value)}
+                                    readOnly={!edit}
                                     />
-                                    {firstName && lastName && biography &&
-                                        <Button type="submit" primary>
+                                    
+                                    {edit &&
+                                        <Button type="submit" secondary>
                                         Submit changes
                                         </Button>
                                     }
@@ -187,6 +178,14 @@ function Profile(){
                             
                                 </div>
                             </Card.Description>
+                        </Card.Content>
+                        <Card.Content extra>
+                            {edit && <div>Only your first name, last name and biography are editable</div>}
+                        <Button 
+                        primary
+                        floated="right"
+                        onClick={() => setEdit(true)}
+                        >Edit profile</Button>
                         </Card.Content>
                     </Card>
                    </Grid.Column>
@@ -208,13 +207,14 @@ const styles = {
   }
 
 const CHANGE_PROFILE_PICTURE_QUERY=gql`
-    mutation changeProfileUrl($profileUrl: String!){
-        changeProfileUrl(profileUrl: $profileUrl)
+    mutation changeProfileUrl($userId: ID!, $profileUrl: String!){
+        changeProfileUrl(userId: $userId, profileUrl: $profileUrl)
     }
 `
 
 const CHANGE_PROFILE_QUERY = gql`
     mutation changeProfile(
+        $userId: ID!
         $firstName: String!,
         $lastName: String!,
         $biography: String!
@@ -222,15 +222,15 @@ const CHANGE_PROFILE_QUERY = gql`
         changeProfile(
             firstName: $firstName,
             lastName: $lastName,
-            biography: $biography
-            
+            biography: $biography,
+            userId: $userId
         )
     }
 `
 
 const GET_PROFILE_QUERY= gql`
-    query getProfile{
-        getProfile{
+    query getProfile($userId: ID!){
+        getProfile(userId: $userId){
             firstName
             lastName
             biography
