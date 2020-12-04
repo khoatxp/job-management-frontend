@@ -21,11 +21,11 @@ function MenuBar() {
         as={Link} 
         to="/" />
       <Menu.Item 
-        name="chat" 
-        active={activeItem === 'chat'}
+        name="create post" 
+        active={activeItem === 'create post'}
         onClick={handleItemClick}
         as={Link} 
-        to="/chat" />
+        to="/createpost" />
       <Menu.Item 
         name="profile" 
         active={activeItem === 'profile'}
@@ -33,11 +33,12 @@ function MenuBar() {
         as={Link} 
         to="/profile" />
       <Menu.Item 
-        name="create post" 
-        active={activeItem === 'create post'}
+        name="chat" 
+        active={activeItem === 'chat'}
         onClick={handleItemClick}
         as={Link} 
-        to="/createpost" />
+        to="/chat" />
+      
       <Menu.Menu position="right">
         <Menu.Item 
           name="logout" 

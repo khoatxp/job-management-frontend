@@ -83,8 +83,8 @@ function Home() {
         {isSearching ? (
           <h1>Loading...</h1>
         ) : (
-          <Transition.Group>
-             
+         
+             <>
 
             { currentJobPosts &&
               currentJobPosts.map((jobPost) => (
@@ -92,8 +92,8 @@ function Home() {
                   <PostCard jobPost={jobPost} />
                 </Grid.Column>
               ))}
-
-          </Transition.Group>
+        </>
+         
         )}
       </Grid.Row>
     </Grid>

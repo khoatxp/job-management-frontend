@@ -9,6 +9,11 @@
   text-align: center;
   margin-top: 1px;
 }
+.right{
+  display: block !important;
+  text-align: left;
+
+}
 .form-container {
   width: 400px;
   margin: auto;

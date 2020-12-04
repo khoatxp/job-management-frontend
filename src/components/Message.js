@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import classNames from 'classnames'
-import moment from 'moment'
+//import moment from 'moment'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { AuthContext } from '../context/auth';
 
@@ -18,6 +18,7 @@ export default function Message({message,index}) {
       overlay={
         <Tooltip>
           {message && message.timeSent}
+          <br/>
           {message && message.dateSent}
         </Tooltip>
       }

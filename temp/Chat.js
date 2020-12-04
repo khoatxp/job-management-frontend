@@ -1,44 +1,51 @@
 import React,{Fragment,useState, useContext, useEffect} from 'react';
+import socketIOClient from "socket.io-client";
 import { AuthContext } from '../context/auth';
 import { Col, Form, Row } from 'react-bootstrap'
 import Message from '../components/Message';
 import {  Grid,Button} from 'semantic-ui-react';
 import { ListGroup } from 'react-bootstrap';
 import '../App.scss'
-var interval;
+var socket = socketIOClient("http://localhost:3001/");
+//var socket = socketIOClient("https://planar-cell-292909.wl.r.appspot.com/");
 export default function Chat(){
-    
+
     const { user } = useContext(AuthContext);
     const [messageRooms, setMessageRooms] = useState([]);
+    const [messageRoomsInfos, setMessageRoomsInfos] = useState([]);
     const [messages, setMessages] = useState([]);
     const [activeRoomId, setActiveRoomId] = useState("")
    
     useEffect(()=>{
-        getMessageRooms(user.username).then((results)=>{
-            setMessageRooms(results);
+        socket.emit('connectUser', user.username);
+        
+        socket.on('receiveMessagesFromRoom', (messages) =>{
+            //Previous messages from specific room
+            setMessages(messages)
         })
-        interval = setInterval(function() {
-
+        socket.on('receiveMessageRooms', (array, roomInfo) =>{
+            //Message room
+            sortDates(array, roomInfo);
+            setMessageRooms(array);
+            setMessageRoomsInfos(roomInfo);
             
-            if(activeRoomId){
-                console.log("calling endpoint")
-                getMessagesFromRoomId(user.username,activeRoomId).then((results)=>{
-                    setMessages(results.reverse())
-                })
+        })
+        socket.emit('getMessageRooms', user.username);
+    }
+    ,[])
+ 
+    useEffect(()=>{
+       
+        socket.on('updateMessagesToUser', (roomId, formattedMessage, name, unread) =>{
+            if(activeRoomId === roomId){
+                //setMessages(messages=>[...messages,formattedMessage]);
+                socket.emit('getMessagesFromRoom', activeRoomId, true)
+             
             }
             
-          }, 5000);
-    }
-    ,[activeRoomId])
-
-     
-    useEffect(() => {
-        return () => {
-            console.log("stoping interval");
-            clearInterval(interval);
-        }
-    }, [])
-   
+        })
+  
+    },[activeRoomId, messages])
     
 
     const [msg, setMsg] = useState("");
@@ -58,21 +65,20 @@ export default function Chat(){
                             key={index} 
                             color={activeRoomId === messageRoom.messageRoomId?"blue":"black"}
                             onClick = {()=>{
-                                getMessagesFromRoomId(user.username,messageRoom.messageRoomId).then((results)=>{
-                                    setMessages(results.reverse())
-                                })
                                 setActiveRoomId(messageRoom.messageRoomId)
-                                setReceiver(messageRoom.name)
-                                
+                                setReceiver(messageRoom.messagingWith)
+                                socket.emit('getMessagesFromRoom', messageRoom.messageRoomId, true)
                                 }
                             }
                             >
                             <Grid.Column >
                                 <Grid.Row>
-                                {messageRoom.name}
+                                {messageRoom.messagingWith}
                                 </Grid.Row>
                                 <Grid.Row className="right">
-                                 {messageRoom.recent_message_datetime}
+                                {messageRoomsInfos[index] && messageRoomsInfos[index].time}
+                                <br/>
+                                {messageRoomsInfos[index] && messageRoomsInfos[index].date}
                                 </Grid.Row>
                             </Grid.Column>
                             </Button>
@@ -110,18 +116,9 @@ export default function Chat(){
                             className="fas fa-paper-plane fa-2x text-primary ml-2"
                             onClick={(e)=>{
                                 e.preventDefault();
-                                sendMessage(user.username, receiver, msg, activeRoomId).then(
-                                    (results)=>{
-                                        if(results){
-                                            getMessagesFromRoomId(user.username,activeRoomId).then((res)=>{
-                                                setMessages(res.reverse())
-                                            })
-                                        }
-                                    }
-                                )
-
-                              
-                                setMsg("");
+                                
+                                socket.emit('sendMessage',{receiver,msg})
+                                    setMsg("");
                                 }}
                             role="button"
                             >Send
@@ -190,52 +187,28 @@ export default function Chat(){
                         </>
     )
 }
-
-
-function getMessageRooms (username) {
-    return fetch(
-      ` https://messagingservice-vbryqcvj2a-uw.a.run.app/messaging/messageRoom?username=${username}`,
-      {
-        method: 'GET'
+function sortDates(array, roomInfo){
+    var datesArr = [];
+    for(let i = 0; i < roomInfo.length; i++){
+       datesArr.push(roomInfo[i].date.concat(' ', roomInfo[i].time));
+    }
+    var i;
+    var key;
+    var j;
+    for(i = 1; i < datesArr.length; i++){
+     key = datesArr[i]; 
+     var key2 = array[i];
+     var key3 = roomInfo[i];
+     j = i - 1;
+      while(j >= 0 && datesArr[j] < key){
+        datesArr[j + 1] = datesArr[j];
+        array[j + 1] = array[j];
+        roomInfo[j + 1] = roomInfo[j];
+        j = j - 1;
       }
-    )
-      .then(res => res.json())
-      .then(res => res)
-      .catch(error => {
-        console.error(error);
-        return [];
-      });
-  }
-
-function getMessagesFromRoomId (username, roomId){
-    return fetch(
-        ` https://messagingservice-vbryqcvj2a-uw.a.run.app/messaging/message/update/${username}/${roomId}`,
-        {
-          method: 'GET'
-        }
-      )
-        .then(res => res.json())
-        .then(res => res.messages)
-        .catch(error => {
-          console.error(error);
-          return [];
-        });
-}
-
-function sendMessage (sender, recipient, message, messageRoomId){
-
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({sender: sender, recipient: recipient, message: message, messageRoomId: messageRoomId})
-    };
+      datesArr[j + 1] = key;
+      array[j + 1] = key2;
+      roomInfo[j + 1] = key3;
+    }
     
-    return fetch('https://messagingservice-vbryqcvj2a-uw.a.run.app/messaging/sendMessage', requestOptions)
-    .then(
-        res=>res.json()
-    )
-    .then(res => res)
 }
