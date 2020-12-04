@@ -6,8 +6,8 @@ import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 
 import { AuthProvider } from './context/auth';
-import AuthRoute from './util/AuthRoute';
 
+import AuthRoute from './util/AuthRoute';
 import MenuBar from './components/MenuBar';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
@@ -16,20 +16,26 @@ import Register from './pages/Register';
 import SinglePost from './pages/SinglePost';
 import CreatePost from './pages/CreatePost';
 import Applicants from './pages/Applicants';
+import Chat from './pages/Chat'
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Container>
-          <MenuBar />
-          <Route exact path="/" component={Home} />
-          <AuthRoute exact path="/profile" component={Profile} />
-          <AuthRoute exact path="/createpost" component={CreatePost} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/jobposts/:postId" component={SinglePost} />
-          <AuthRoute exact path="/applicants/:postId" component={Applicants} />
-        </Container>
+      
+          <Container>
+            <MenuBar />
+            <Route exact path="/" component={Home} />
+            <AuthRoute exact path="/profile" component={Profile} />
+            <AuthRoute exact path="/createpost" component={CreatePost} />
+            
+            <AuthRoute exact path="/chat" component={Chat}></AuthRoute>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/jobposts/:postId" component={SinglePost} />
+            <AuthRoute exact path="/applicants/:postId" component={Applicants} />
+          </Container>
+       
       </Router>
     </AuthProvider>
   );

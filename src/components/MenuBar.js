@@ -1,17 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import socketIOClient from "socket.io-client";
 import { AuthContext } from '../context/auth';
 
 function MenuBar() {
   const { user, logout } = useContext(AuthContext);
   const pathname = window.location.pathname;
-  const [endpoint, setEndpoint] = useState("http://localhost:3001/")
   
-  // useEffect(()=>{
-  //   socket = socketIOClient(endpoint)
-  // },[endpoint])
   const path = pathname === '/' ? 'home' : pathname.substr(1);
   const [activeItem, setActiveItem] = useState(path);
 
@@ -25,7 +20,12 @@ function MenuBar() {
         onClick={handleItemClick}
         as={Link} 
         to="/" />
-
+      <Menu.Item 
+        name="chat" 
+        active={activeItem === 'chat'}
+        onClick={handleItemClick}
+        as={Link} 
+        to="/chat" />
       <Menu.Item 
         name="profile" 
         active={activeItem === 'profile'}
@@ -53,6 +53,7 @@ function MenuBar() {
         as={Link}
         to="/"
       />
+      
       <Menu.Menu position="right">
         <Menu.Item
           name="login"

@@ -5,7 +5,7 @@ import PostCard from '../components/PostCard';
 import useDebounce from '../util/use-debounce';
 import { BsSearch } from "react-icons/bs";
 import Pagination from "react-js-pagination";
-import MessageBox from "../components/MessageBox";
+
 function Home() {
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState("");
@@ -14,16 +14,10 @@ function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const debouncedSearchTerm = useDebounce(search, 500);
   useEffect(
-    () => {
-      // Make sure we have a value (user has entered something in input)
-        
-        // Set isSearching state
+    () => {  
         setIsSearching(true);
-        // Fire off our API call
         searchCharacters(debouncedSearchTerm).then(results => {
-        // Set back to false since request finished
         setIsSearching(false);
-        // Set results state
         
         if(user && filter){
           setResults(results.filter((p)=>p.username === user.username))
@@ -117,7 +111,7 @@ function Home() {
          </div>
       </div>
     </Grid.Row>
-    <MessageBox/>
+
     </div>
   );
 }

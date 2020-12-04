@@ -10,15 +10,19 @@ const formatMessage = require('./utils/formatMessage');
 const {getCurrentUser, userJoined, userLeave, getUserSocketId, isUserOnline} = require('./utils/connectedUsers');
 const roomInfo = require('./utils/messageRoomInfo');
 const {messageRoomExist, findMessageRoom} = require('./utils/roomfuncs');
-const cors = require('cors');
 const app = express()
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server,{
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
 
-var dbUrl = "mongodb+srv://production:production@cluster0.bgzbd.mongodb.net/production?retryWrites=true&w=majority";
+
+var dbUrl = "mongodb+srv://khoatxp:GfAxnlFdEOYbDUJ8@cluster0.ibt1p.mongodb.net/dev?retryWrites=true&w=majority";
 
 mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true} ,(err) => {
     if(err) throw err;
@@ -98,7 +102,7 @@ io.on('connection', socket => {
         result.save();
       }
 
-      socket.emit('receiveMessagesFromRoom',result.messages);
+      socket.emit('receiveMessagesFromRoom',result.messages.reverse());
     });
     
   });
