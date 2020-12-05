@@ -19,12 +19,9 @@ export default function Chat(){
     const [roomIndex, setRoomIndex]= useState();
     useEffect(()=>{
         
-        getMessageRooms(user.username).then((results)=>{
-            setMessageRooms(results);
-            setLoading(false);
-        })
+
         interval = setInterval(function() {
-            if(activeRoomId  && messageRooms && activeRoomId === messageRooms[roomIndex].messageRoomId ){
+            if(activeRoomId && roomIndex && messageRooms && activeRoomId === messageRooms[roomIndex].messageRoomId ){
 
                 console.log("calling endpoint")
                 getMessagesFromRoomId(user.username,activeRoomId).then((results)=>{
@@ -38,6 +35,10 @@ export default function Chat(){
 
      
     useEffect(() => {
+        getMessageRooms(user.username).then((results)=>{
+            setMessageRooms(results);
+            setLoading(false);
+        })
         setLoading(true);
         return () => {
             console.log("stoping interval");
