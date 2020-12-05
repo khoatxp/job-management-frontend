@@ -55,7 +55,7 @@ function SinglePost(props) {
                 <Card.Meta>Estimated salary: {salary}</Card.Meta>
                 <Card.Meta>Location: {location}</Card.Meta>
                 <Card.Meta >
-                  posted {moment(createdAt).fromNow(true)} ago
+                  posted {moment(createdAt).fromNow(true)} ago by {username}
                 </Card.Meta>
                 <Card.Description>
                   <pre id="body">{body}</pre>
@@ -99,14 +99,14 @@ function SinglePost(props) {
                         };
                        
                         //send to bucket
-                        const response1 = await fetch('https://resumeservice-vbryqcvj2a-uw.a.run.app/resume', requestOptions)
+                        const response1 = await fetch('https://resumeservice-pvwu2w75ta-uw.a.run.app/resume', requestOptions)
                         const json1 = await response1.json();
                         const originalFile = json1.url;
                         console.log(originalFile);
                         //get parsed resume
-                        const response2= await fetch('https://resumeservice-vbryqcvj2a-uw.a.run.app/resume/parse', requestOptions)
+                        const response2= await fetch('https://resumeservice-pvwu2w75ta-uw.a.run.app/resume/parse', requestOptions)
                         const json2 = await response2.json();
-                        const resume =  JSON.stringify(json2);
+                        const resume =  JSON.stringify(json2.data);
                         const postId = id;
                        
                         await addApplicantMutation({ variables: {

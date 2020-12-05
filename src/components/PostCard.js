@@ -22,7 +22,7 @@ function PostCard({
         <Card.Meta>Estimated salary: {salary}</Card.Meta>
         <Card.Meta>Location: {location}</Card.Meta>
         <Card.Meta >
-          posted {moment(createdAt).fromNow(true)} ago
+          posted {moment(createdAt).fromNow(true)} ago by {username}
         </Card.Meta>
         
       </Card.Content>

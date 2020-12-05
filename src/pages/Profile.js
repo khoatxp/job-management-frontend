@@ -98,7 +98,7 @@ function Profile(){
                                             method: 'POST',
                                             body: body
                                         };
-                                        const response = await fetch('https://resumeservice-vbryqcvj2a-uw.a.run.app/user/profilepicture', requestOptions)
+                                        const response = await fetch('https://resumeservice-pvwu2w75ta-uw.a.run.app/user/profilepicture', requestOptions)
                                         const json = await response.json();
                                         const profileUrl = json.url;
                                         
