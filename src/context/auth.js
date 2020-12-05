@@ -13,7 +13,7 @@ if (localStorage.getItem('jwtToken')) {
   } else {
     initialState.user = decodedToken;
   }
-}
+}else console.log('No token found')
 
 const AuthContext = createContext({
   user: null,

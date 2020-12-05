@@ -71,6 +71,7 @@ function PostForm() {
           />
           <Form.TextArea
             placeholder="Description of job"
+            rows="25"
             name="body"
             onChange={onChange}
             value={values.body}

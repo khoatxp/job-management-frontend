@@ -28,7 +28,6 @@ function Applicants(props) {
     postMarkup =(
         <>
         {user && username===user.username && applicants && applicants.map((applicant)=>(
-            
             <Applicant applicant={applicant}></Applicant>
         ))}
         {user && username===user.username && !applicants.length && <p>There are no applicants for this post yet</p>}
@@ -53,6 +52,7 @@ const FETCH_POST_QUERY = gql`
         resume
         username
         submittedAt
+        originalFile
       }
     }
   }
