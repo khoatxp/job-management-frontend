@@ -2,6 +2,7 @@
   "name": "frontent",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@apollo/client": "^3.3.3",
     "@apollo/react-hooks": "^4.0.0",
@@ -15,6 +16,7 @@
     "apollo-link-ws": "^1.0.20",
     "bootstrap": "^4.5.3",
     "classnames": "^2.2.6",
+    "firebase": "^9.17.2",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "jwt-decode": "^3.1.1",
