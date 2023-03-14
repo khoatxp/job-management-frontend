@@ -117,7 +117,7 @@ function Home() {
 }
 function searchCharacters(search) {
   return fetch(
-    `https://searchservice-bgfktawxha-uw.a.run.app/jobPosting?query=${search}&queryLimit=100`,
+    `https://search-service-pvwu2w75ta-wl.a.run.app/jobPosting?query=${search}&queryLimit=100`,
     {
       method: 'GET'
     }

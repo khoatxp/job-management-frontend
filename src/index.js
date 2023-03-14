@@ -15,12 +15,12 @@ ReactDOM.render(ApolloProvider, document.getElementById('root'));
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAEsMAJI-2Z41FJWM0K0sBCHaiLXNiEtjA",
-    authDomain: "learning-380319.firebaseapp.com",
-    projectId: "learning-380319",
-    storageBucket: "learning-380319.appspot.com",
-    messagingSenderId: "99234643110",
-    appId: "1:99234643110:web:243554314297358cf0c867"
+  apiKey: "AIzaSyD0saFzPKOBe1sgmqIDuH9-v39_9wazxDk",
+  authDomain: "cmpt474-95a5e.firebaseapp.com",
+  projectId: "cmpt474-95a5e",
+  storageBucket: "cmpt474-95a5e.appspot.com",
+  messagingSenderId: "254653835170",
+  appId: "1:254653835170:web:61694b7721765e9e1934fb"
 };
 
 // Initialize Firebase
