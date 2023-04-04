@@ -97,15 +97,16 @@ function SinglePost(props) {
                           method: 'POST',
                           body: body
                         };
-                       
+
                         //send to bucket
-                        const response1 = await fetch('https://resumeservice-pvwu2w75ta-uw.a.run.app/resume', requestOptions)
+                        const response1 = await fetch(`${process.env.REACT_APP_GATEWAY_URL}/resume?key=${process.env.REACT_APP_API_KEY}`, requestOptions)
                         const json1 = await response1.json();
                         const originalFile = json1.url;
                         console.log(originalFile);
                         //get parsed resume
-                        const response2= await fetch('https://resumeservice-pvwu2w75ta-uw.a.run.app/resume/parse', requestOptions)
+                        const response2= await fetch(`${process.env.REACT_APP_GATEWAY_URL}/resume/parse?key=${process.env.REACT_APP_API_KEY}`, requestOptions)
                         const json2 = await response2.json();
+                        console.log(json2);
                         const resume =  JSON.stringify(json2.data);
                         const postId = id;
                        

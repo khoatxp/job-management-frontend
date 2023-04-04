@@ -16,6 +16,7 @@
     "apollo-link-ws": "^1.0.20",
     "bootstrap": "^4.5.3",
     "classnames": "^2.2.6",
+    "env-cmd": "^10.1.0",
     "firebase": "^9.17.2",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
@@ -39,8 +40,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env react-scripts start",
+    "build": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -61,6 +62,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://backend-pvwu2w75ta-uw.a.run.app/"
+  }
 }

@@ -117,7 +117,7 @@ function Home() {
 }
 function searchCharacters(search) {
   return fetch(
-    `https://searchservice-bgfktawxha-uw.a.run.app/jobPosting?query=${search}&queryLimit=100`,
+    `${process.env.REACT_APP_GATEWAY_URL}/search?key=${process.env.REACT_APP_API_KEY}&query=${search}&queryLimit=100`,
     {
       method: 'GET'
     }

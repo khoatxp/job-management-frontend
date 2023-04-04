@@ -7,8 +7,9 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { setContext } from 'apollo-link-context';
 
 const httpLink = createHttpLink({
-  //uri:'http://localhost:8080/',
-  uri: 'https://graphql-service-5oq7yfatka-uw.a.run.app/',
+  // uri:'http://localhost:8080/',
+  // uri:'https://gateway-pvwu2w75ta-wl.a.run.app',
+  uri:`${process.env.REACT_APP_GATEWAY_URL}/auth?key=${process.env.REACT_APP_API_KEY}`,
 });
 
 const authLink = setContext(() => {

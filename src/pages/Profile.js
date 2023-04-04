@@ -98,7 +98,7 @@ function Profile(){
                                             method: 'POST',
                                             body: body
                                         };
-                                        const response = await fetch('https://resumeservice-pvwu2w75ta-uw.a.run.app/user/profilepicture', requestOptions)
+                                        const response = await fetch(`${process.env.REACT_APP_GATEWAY_URL}/user-profile?key=${process.env.REACT_APP_API_KEY}`, requestOptions)
                                         const json = await response.json();
                                         const profileUrl = json.url;
                                         
@@ -208,7 +208,12 @@ const styles = {
 
 const CHANGE_PROFILE_PICTURE_QUERY=gql`
     mutation changeProfileUrl($userId: ID!, $profileUrl: String!){
-        changeProfileUrl(userId: $userId, profileUrl: $profileUrl)
+        changeProfileUrl(userId: $userId, profileUrl: $profileUrl){
+            firstName
+            lastName
+            biography
+            profileUrl
+        }
     }
 `
 
